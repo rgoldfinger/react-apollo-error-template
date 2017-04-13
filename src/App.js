@@ -1,46 +1,65 @@
 import React, { Component } from 'react';
 import { gql, graphql } from 'react-apollo';
 
-class App extends Component {
+class HasError extends Component {
   render() {
-    const { data: { loading, people } } = this.props;
+    const { data: { loading, people, error } } = this.props;
     return (
       <main>
-        <header>
-          <h1>Apollo Client Error Template</h1>
-          <p>
-            This is a template that you can use to demonstrate an error in Apollo Client.
-            Edit the source code and watch your browser window reload with the changes.
-          </p>
-          <p>
-            The code which renders this component lives in <code>./src/App.js</code>.
-          </p>
-          <p>
-            The GraphQL schema is in <code>./src/graphql/schema</code>.
-            Currently the schema just serves a list of people with names and ids.
-          </p>
-        </header>
-        {loading ? (
-          <p>Loading…</p>
-        ) : (
-          <ul>
-            {people.map(person => (
-              <li key={person.id}>
-                {person.name}
-              </li>
-            ))}
-          </ul>
-        )}
+        <h1>This component fetches an error</h1>
       </main>
     );
   }
 }
 
-export default graphql(
-  gql`{
+const WrappedHasError = graphql(
+  gql`query Error{
+    errorPeople {
+      id
+      name
+    }
+  }`,
+)(HasError);
+
+class PeopleList extends Component {
+  render() {
+    const { data: { loading, people } } = this.props;
+    return (
+      <main>
+        <h1>People: {people && people.map(p => p.name)}</h1>
+      </main>
+    );
+  }
+}
+
+const WrappedPeopleList= graphql(
+  gql`query Error{
     people {
       id
       name
     }
   }`,
-)(App)
+)(PeopleList);
+
+class App extends Component {
+  state = {
+    showPeople: false,
+  }
+
+  componentDidMount() {
+    setTimeout(
+      () => {
+        this.setState({ showPeople: true });
+      },
+      1100,
+    );
+  }
+
+  render() {
+    return (
+      this.state.showPeople ? <WrappedPeopleList /> : <WrappedHasError />
+    );
+  }
+}
+
+export default App;

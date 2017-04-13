@@ -3,6 +3,9 @@ import { schema } from './schema';
 
 export const networkInterface = {
   query({ query, variables, operationName }) {
+    // if (query.definitions[0].name.value === 'Error') {
+    //   return {errors: [{message: '401'}]};
+    // }
     return delay(500).then(() => {
       return graphql(
         schema,

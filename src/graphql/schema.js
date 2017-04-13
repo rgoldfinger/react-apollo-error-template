@@ -27,6 +27,12 @@ const QueryType = new GraphQLObjectType({
       type: new GraphQLList(PersonType),
       resolve: () => peopleData,
     },
+    errorPeople: {
+      type: new GraphQLList(PersonType),
+      resolve: () => {
+        throw new Error('500')
+      },
+    },
   },
 });
 
