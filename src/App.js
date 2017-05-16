@@ -19,6 +19,12 @@ const WrappedHasError = graphql(
       name
     }
   }`,
+  {
+    props: props => {
+      console.log(props.data.error);
+      return props;
+    },
+  }
 )(HasError);
 
 class PeopleList extends Component {
@@ -32,33 +38,33 @@ class PeopleList extends Component {
   }
 }
 
-const WrappedPeopleList= graphql(
+const WrappedPeopleList = graphql(
   gql`query Error{
     people {
       id
       name
     }
   }`,
+  {
+    props: props => {
+      return props;
+    },
+  }
 )(PeopleList);
 
 class App extends Component {
   state = {
     showPeople: false,
-  }
+  };
 
   componentDidMount() {
-    setTimeout(
-      () => {
-        this.setState({ showPeople: true });
-      },
-      1100,
-    );
+    setTimeout(() => {
+      this.setState({ showPeople: true });
+    }, 1100);
   }
 
   render() {
-    return (
-      this.state.showPeople ? <WrappedPeopleList /> : <WrappedHasError />
-    );
+    return this.state.showPeople ? <WrappedPeopleList /> : <WrappedHasError />;
   }
 }
 
